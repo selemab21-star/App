@@ -1,60 +1,141 @@
 /* ==========================================================================
-   Cero Ojeras VIP - Telegram Mini App Logic
-   Telegram.WebApp Integration + Local Testing Simulation
+   Selem Beauty - Application Logic
+   Telegram WebApp Integration + Dynamic Plan Recomendado & Splash Flow
    ========================================================================== */
 
-// Configuración de Estado App
+// Estado Global de la App
 const state = {
     isVIP: false,
-    completedDays: [],
+    completedExercises: [],
     timerInterval: null,
-    timerSeconds: 180, // 3 min por defecto
-    currentExerciseId: 1
+    timerSeconds: 300,
+    currentExerciseId: 1,
+    currentView: 'welcome' // 'welcome' | 'plan'
 };
 
-// Referencia Telegram SDK
+// SDK Telegram WebApp
 const tg = window.Telegram ? window.Telegram.WebApp : null;
 
-// Ejercicios Configurados
+// Datos completos de los 8 Módulos de Plan Recomendado (Coinciden exactamente con Imagen 1)
 const exercisesData = {
     1: {
-        title: "Técnica Crio-Drenante de Mañana",
-        day: "Día 1 • 5 min",
-        duration: 180, // 3 min
+        id: 1,
+        title: "5- Min Ejercicios Faciales",
+        level: "Intermedio",
+        durationText: "5 min",
+        duration: 300,
+        img: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=400&q=80",
         steps: [
-            "Limpia suavemente el rostro y aplica 2 gotas de sérum o hidratante liviano.",
-            "Usa 2 cucharas frías de tu refrigerador o rodillo crio.",
-            "Realiza suave presión desde el lagrimal hacia las sienes sin estirar la piel (15 repeticiones).",
-            "Drena hacia el lateral del cuello para liberar el exceso de líquidos retenidos."
+            "Aplica 3 gotas de sérum o aceite facial en manos limpias.",
+            "Realiza suave presión alisando la frente desde las cejas hacia el cuero cabelludo.",
+            "Desliza las yemas desde el centro del rostro hacia las sienes para esculpir los pómulos.",
+            "Termina con suaves toques alrededor de la mandíbula y el cuello durante 5 minutos."
         ]
     },
     2: {
-        title: "Fórmula Aclarante con Rosa Mosqueta",
-        day: "Día 2 • 7 min",
-        duration: 240, // 4 min
+        id: 2,
+        title: "Rellenador de Labios",
+        level: "Intermedio",
+        durationText: "5 min 50s",
+        duration: 350,
+        img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=80",
         steps: [
-            "Aplica 1-2 gotas de aceite puro de rosa mosqueta en el dedo anular.",
-            "Realiza suaves pulsaciones de acupresión alrededor del hueso orbital.",
-            "Mantén la presión leve durante 3 segundos en 5 puntos clave bajo la pupila.",
-            "Puntea suavemente para estimular la circulación y regeneración nocturna."
+            "Humecta tus labios con bálsamo o aceite de argán.",
+            "Forma una 'O' suave con tus labios sin arrugar la piel alrededor.",
+            "Da pequeños pellizcos suaves en el contorno del labio superior e inferior para activar la microcirculación.",
+            "Pulsiona suavemente las esquinas de los labios hacia arriba durante 5 minutos y 50 segundos."
         ]
     },
     3: {
-        title: "Levantamiento de Párpados y Mirada Cansada",
-        day: "Día 3 • 6 min",
-        duration: 210, // 3.5 min
+        id: 3,
+        title: "Efecto Bótox Facial",
+        level: "Principiante",
+        durationText: "6 min 40s",
+        duration: 400,
+        img: "https://images.unsplash.com/photo-1512290900673-030635e07661?auto=format&fit=crop&w=400&q=80",
         steps: [
-            "Coloca tus dedos índices en los extremos de tus cejas.",
-            "Intenta cerrar los ojos ejerciendo ligera resistencia hacia arriba.",
-            "Sostén la tensión isométrica durante 5 segundos y relaja. Repite 10 veces.",
-            "Parpadea suavemente para lubricar el globo ocular."
+            "Coloca las palmas de tus manos sobre las sienes y estira ligeramente hacia arriba.",
+            "Relaja la frente mientras abres y cierras los ojos lentamente.",
+            "Masajea en círculos el músculo procero entre las cejas para prevenir líneas de expresión.",
+            "Sostén la elevación durante 6 minutos y 40 segundos manteniendo respiración profunda."
+        ]
+    },
+    4: {
+        id: 4,
+        title: "Lifting Antienvejecimiento",
+        level: "Intermedio",
+        durationText: "4 min 30s",
+        duration: 270,
+        img: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=80",
+        steps: [
+            "Coloca tus nudillos justo debajo de los pómulos.",
+            "Realiza un movimiento de barrido ascendente hacia las orejas ejerciendo presión moderada.",
+            "Repite el movimiento desde el mentón hasta los lóbulos de las orejas.",
+            "Drena el exceso de líquido bajando por los laterales del cuello."
+        ]
+    },
+    5: {
+        id: 5,
+        title: "Reduce las Ojeras",
+        level: "Principiante",
+        durationText: "3 min 30s",
+        duration: 210,
+        img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80",
+        steps: [
+            "Usa el dedo anular para aplicar contorno de ojos o frío (cucharas o rodillo crio).",
+            "Puntea suavemente alrededor del hueso orbicular desde el lagrimal hacia afuera.",
+            "Realiza suave drenaje linfático sin estirar la piel delicada de las ojeras.",
+            "Continúa durante 3 minutos y 30 segundos para desinflamar la mirada."
+        ]
+    },
+    6: {
+        id: 6,
+        title: "Cuello de Cisne",
+        level: "Principiante",
+        durationText: "4 min 30s",
+        duration: 270,
+        img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=400&q=80",
+        steps: [
+            "Siéntate erguida con los hombros relajados hacia atrás.",
+            "Eleva la barbilla hacia el techo sintiendo el estiramiento en la parte frontal del cuello.",
+            "Toca el paladar con la punta de la lengua para activar el platisma.",
+            "Mantén la posición y realiza rotaciones suaves hacia la izquierda y derecha."
+        ]
+    },
+    7: {
+        id: 7,
+        title: "Piel Brillante",
+        level: "Principiante",
+        durationText: "4 min",
+        duration: 240,
+        img: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=400&q=80",
+        steps: [
+            "Activa la circulación dando palmaditas suaves por todo el rostro con las yemas.",
+            "Realiza movimientos circulares ascendentes alrededor de mejillas y frente.",
+            "Aplica tu hidratante sellando con el calor de la palma de tus manos.",
+            "Respira profundamente durante 4 minutos para oxigenar los tejidos faciales."
+        ]
+    },
+    8: {
+        id: 8,
+        title: "Deshazte de la Papada",
+        level: "Intermedio",
+        durationText: "4 min 30s",
+        duration: 270,
+        img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
+        steps: [
+            "Forma una 'V' con tus dedos índice y medio y deslízala a lo largo del hueso mandibular.",
+            "Presiona firmemente desde el mentón hacia la parte posterior de la mandíbula.",
+            "Inclina la cabeza ligeramente hacia atrás y pronuncia la letra 'X' y 'O' exagerando el movimiento.",
+            "Repite durante 4 minutos y 30 segundos para tonificar la zona submentoniana."
         ]
     }
 };
 
-// Inicialización de la App
+// Inicialización de la Aplicación
 document.addEventListener("DOMContentLoaded", () => {
     initTelegramApp();
+    renderPlanList();
     loadLocalProgress();
     updateUIState();
 });
@@ -62,184 +143,101 @@ document.addEventListener("DOMContentLoaded", () => {
 // Inicialización SDK Telegram
 function initTelegramApp() {
     if (tg) {
-        console.log("SDK de Telegram WebApp Detectado:", tg);
+        console.log("SDK Telegram WebApp disponible");
         tg.ready();
-        tg.expand(); // Expande a pantalla completa
-
-        // Aplicar colores del tema de Telegram si están disponibles
-        if (tg.setHeaderColor) tg.setHeaderColor("#FAF9F6");
-        if (tg.setBackgroundColor) tg.setBackgroundColor("#FAF9F6");
-
-        // Obtener nombre y foto del usuario si está dentro de Telegram
-        const user = tg.initDataUnsafe?.user;
-        if (user) {
-            document.getElementById("userName").innerText = `Hola, ${user.first_name} ✨`;
-            if (user.photo_url) {
-                document.getElementById("userAvatar").src = user.photo_url;
-            }
-        }
-    } else {
-        console.log("Navegador Estándar: Ejecutando en modo simulación local.");
+        tg.expand();
+        if (tg.setHeaderColor) tg.setHeaderColor("#FFFFFF");
+        if (tg.setBackgroundColor) tg.setBackgroundColor("#F8F8F8");
     }
 }
 
-// Alternar entre Pestañas
-function switchTab(tabId) {
-    triggerHaptic('selectionChanged');
-    
-    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-    document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
-
-    const activeBtn = document.querySelector(`.tab-btn[onclick="switchTab('${tabId}')"]`);
-    if (activeBtn) activeBtn.classList.add("active");
-
-    const activeTab = document.getElementById(`tab-${tabId}`);
-    if (activeTab) activeTab.classList.add("active");
+// Navegación entre Vistas
+function goToPlanView() {
+    triggerHaptic('impactMedium');
+    state.currentView = 'plan';
+    document.getElementById("view-welcome").classList.remove("active");
+    document.getElementById("view-plan").classList.add("active");
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Acción Principal: Desbloquear / Comprar Plan VIP
-function desbloquearPlan() {
-    triggerHaptic('impactHeavy');
-
-    if (state.isVIP) {
-        // Si ya es VIP, al presionar el botón nos lleva a la pestaña de protocolo
-        switchTab('protocolo');
-        showToast("✨ Ya tienes acceso VIP activado. ¡Disfruta tus rutinas!");
-        return;
-    }
-
-    const payload = {
-        action: "buy_premium_plan",
-        item: "cero_ojeras_vip",
-        price: 9.99,
-        currency: "USD",
-        user_id: tg?.initDataUnsafe?.user?.id || "user_demo_123",
-        timestamp: new Date().toISOString()
-    };
-
-    if (tg && tg.sendData) {
-        // Si se ejecuta dentro de Telegram, envía los datos al Bot nativamente
-        tg.sendData(JSON.stringify(payload));
-    } else {
-        // Si se ejecuta en navegador web / local, despliega el modal de inspección
-        document.getElementById("jsonPayloadCode").innerText = JSON.stringify(payload, null, 2);
-        document.getElementById("telegramPayloadModal").classList.add("active");
-    }
-}
-
-// Simular Respuesta de Pago Exitoso desde el Bot
-function simulateSuccessfulPayment() {
-    closePayloadModal();
-    state.isVIP = true;
-    saveLocalProgress();
-    updateUIState();
-    triggerHaptic('notificationSuccess');
-    showToast("🎉 ¡Pago recibido! Has desbloqueado el Protocolo VIP.");
-}
-
-// Toggle Estado VIP para pruebas rápidas
-function toggleVIPState() {
-    state.isVIP = !state.isVIP;
-    saveLocalProgress();
-    updateUIState();
+function goToWelcomeView() {
     triggerHaptic('impactLight');
+    state.currentView = 'welcome';
+    document.getElementById("view-plan").classList.remove("active");
+    document.getElementById("view-welcome").classList.add("active");
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Actualizar Interfaz (Bloqueado vs Desbloqueado)
-function updateUIState() {
-    const previewCard = document.getElementById("previewCard");
-    const lockOverlay = document.getElementById("lockOverlay");
-    const bannerBadge = document.getElementById("bannerBadge");
-    const vipStatusBadge = document.getElementById("vipStatusBadge");
-    const btnUnlock = document.getElementById("btnUnlock");
-    const devStatusText = document.getElementById("devStatusText");
-    const progressCard = document.getElementById("progressCard");
+// Renderizado de Lista de Módulos (Plan Recomendado)
+function renderPlanList() {
+    const container = document.getElementById("planList");
+    if (!container) return;
 
-    if (state.isVIP) {
-        // MODO DESBLOQUEADO (VIP)
-        previewCard.classList.remove("locked");
-        previewCard.classList.add("unlocked");
-        lockOverlay.style.display = "none";
-        
-        bannerBadge.innerText = "⭐ MIEMBRO VIP";
-        bannerBadge.style.background = "rgba(56, 161, 105, 0.9)";
-        
-        vipStatusBadge.innerText = "⭐ ACCESO VIP COMPLETO";
-        vipStatusBadge.classList.add("vip-active");
+    let html = "";
+    Object.values(exercisesData).forEach(item => {
+        const isCompleted = state.completedExercises.includes(item.id);
+        html += `
+            <div class="plan-card ${isCompleted ? 'completed' : ''}" onclick="openExerciseModal(${item.id})">
+                <div class="plan-card-img-wrap">
+                    <img src="${item.img}" alt="${item.title}" class="plan-card-img">
+                </div>
+                <div class="plan-card-info">
+                    <h3 class="plan-card-title">${item.title}</h3>
+                    <span class="plan-card-meta">${item.level} | ${item.durationText}</span>
+                </div>
+                <div class="plan-card-arrow">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </div>
+            </div>
+        `;
+    });
 
-        btnUnlock.classList.add("unlocked-btn");
-        btnUnlock.querySelector(".btn-icon").innerText = "✨";
-        btnUnlock.querySelector(".btn-text").innerText = "VER MI PROTOCOLO VIP";
-
-        devStatusText.innerText = "Estado: 🔓 Desbloqueado (VIP Activo)";
-        progressCard.classList.remove("hidden");
-        updateProgressWidget();
-    } else {
-        // MODO BLOQUEADO (PAYWALL)
-        previewCard.classList.add("locked");
-        previewCard.classList.remove("unlocked");
-        lockOverlay.style.display = "flex";
-
-        bannerBadge.innerText = "🔒 Exclusivo 14 Días";
-        bannerBadge.style.background = "rgba(0, 0, 0, 0.65)";
-
-        vipStatusBadge.innerText = "🔒 PLAN FREEMIUM";
-        vipStatusBadge.classList.remove("vip-active");
-
-        btnUnlock.classList.remove("unlocked-btn");
-        btnUnlock.querySelector(".btn-icon").innerText = "🔓";
-        btnUnlock.querySelector(".btn-text").innerText = "DESBLOQUEAR PLAN VIP • $9.99 USD";
-
-        devStatusText.innerText = "Estado: 🔒 Bloqueado (Pre-Pago)";
-        progressCard.classList.add("hidden");
-    }
+    container.innerHTML = html;
 }
 
 // Abrir Modal de Ejercicio
-function openExerciseModal(exerciseId) {
+function openExerciseModal(id) {
     triggerHaptic('impactLight');
-    
-    if (!state.isVIP) {
-        desbloquearPlan();
-        return;
-    }
+    const data = exercisesData[id];
+    if (!data) return;
 
-    state.currentExerciseId = exerciseId;
-    const data = exercisesData[exerciseId] || exercisesData[1];
-
-    document.getElementById("modalBadge").innerText = data.day;
-    document.getElementById("modalTitle").innerText = data.title;
-    
-    const stepsList = document.getElementById("modalSteps");
-    stepsList.innerHTML = data.steps.map(step => `<li>${step}</li>`).join("");
-
+    state.currentExerciseId = id;
     state.timerSeconds = data.duration;
-    updateTimerDisplay();
 
+    document.getElementById("modalBadge").innerText = `${data.level} • ${data.durationText}`;
+    document.getElementById("modalTitle").innerText = data.title;
+
+    // Pasos
+    const stepsOl = document.getElementById("modalSteps");
+    stepsOl.innerHTML = data.steps.map(step => `<li>${step}</li>`).join("");
+
+    // Resetear Cronómetro
+    resetTimerUI();
     document.getElementById("exerciseModal").classList.add("active");
 }
 
 function closeExerciseModal() {
+    triggerHaptic('impactLight');
     clearInterval(state.timerInterval);
     state.timerInterval = null;
-    document.getElementById("btnTimerStart").innerText = "▶ Iniciar Ejercicio";
     document.getElementById("exerciseModal").classList.remove("active");
 }
 
-function closePayloadModal() {
-    document.getElementById("telegramPayloadModal").classList.remove("active");
-}
-
-// Timer Logic
+// Lógica de Cronómetro
 function toggleTimer() {
+    triggerHaptic('selectionChanged');
     const btn = document.getElementById("btnTimerStart");
-    
+
     if (state.timerInterval) {
         clearInterval(state.timerInterval);
         state.timerInterval = null;
-        btn.innerText = "▶ Reanudar Ejercicio";
+        btn.innerText = "▶ Reanudar Rutina";
+        btn.classList.remove("running");
     } else {
-        btn.innerText = "⏸ Pausar";
+        btn.innerText = "⏸ Pausar Rutina";
+        btn.classList.add("running");
         state.timerInterval = setInterval(() => {
             if (state.timerSeconds > 0) {
                 state.timerSeconds--;
@@ -247,7 +245,8 @@ function toggleTimer() {
             } else {
                 clearInterval(state.timerInterval);
                 state.timerInterval = null;
-                btn.innerText = "🎉 ¡Completado!";
+                btn.innerText = "✓ Rutina Finalizada";
+                btn.classList.remove("running");
                 triggerHaptic('notificationSuccess');
                 markExerciseComplete();
             }
@@ -255,97 +254,109 @@ function toggleTimer() {
     }
 }
 
+function resetTimerUI() {
+    clearInterval(state.timerInterval);
+    state.timerInterval = null;
+    const btn = document.getElementById("btnTimerStart");
+    btn.innerText = "▶ Iniciar Rutina";
+    btn.classList.remove("running");
+    updateTimerDisplay();
+}
+
 function updateTimerDisplay() {
     const mins = Math.floor(state.timerSeconds / 60);
     const secs = state.timerSeconds % 60;
-    const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-    document.getElementById("timerDisplay").innerText = formatted;
+    const display = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    document.getElementById("timerDisplay").innerText = display;
 
-    // Actualizar anillo SVG
-    const maxDuration = exercisesData[state.currentExerciseId]?.duration || 180;
-    const offset = 283 - (state.timerSeconds / maxDuration) * 283;
-    document.getElementById("timerCircle").style.strokeDashoffset = offset;
+    // Progreso Circular SVG
+    const total = exercisesData[state.currentExerciseId].duration;
+    const percentage = state.timerSeconds / total;
+    const circle = document.getElementById("timerCircle");
+    const circumference = 2 * Math.PI * 45; // r=45 -> 282.74
+    circle.style.strokeDashoffset = circumference * (1 - percentage);
 }
 
-// Marcar Ejercicio Completado
+// Marcar Completado
 function markExerciseComplete() {
-    if (!state.completedDays.includes(state.currentExerciseId)) {
-        state.completedDays.push(state.currentExerciseId);
+    if (!state.completedExercises.includes(state.currentExerciseId)) {
+        state.completedExercises.push(state.currentExerciseId);
         saveLocalProgress();
-        updateProgressWidget();
+        renderPlanList();
     }
-    showToast("🎉 ¡Excelente! Has completado la rutina de hoy.");
+    showToast("✨ ¡Rutina completada con éxito!");
     closeExerciseModal();
 }
 
-function updateProgressWidget() {
-    const count = state.completedDays.length;
-    document.getElementById("progressText").innerText = `${count} de 14 Días Completados`;
-    const percent = Math.min(100, Math.max(7, (count / 14) * 100));
-    document.getElementById("progressBarFill").style.width = `${percent}%`;
+// Alternar Estado VIP (Simulación)
+function toggleVIPState() {
+    state.isVIP = !state.isVIP;
+    saveLocalProgress();
+    updateUIState();
+    triggerHaptic('impactLight');
 }
 
-// Guardar y Cargar en LocalStorage
+function updateUIState() {
+    const badge = document.getElementById("vipStatusBadge");
+    const devStatusText = document.getElementById("devStatusText");
+
+    if (badge) {
+        if (state.isVIP) {
+            badge.innerText = "⭐ VIP ACTIVO";
+            badge.classList.add("vip-active");
+            if (devStatusText) devStatusText.innerText = "Estado: 🔓 Desbloqueado (VIP)";
+        } else {
+            badge.innerText = "🔒 FREEMIUM";
+            badge.classList.remove("vip-active");
+            if (devStatusText) devStatusText.innerText = "Estado: 🔒 Bloqueado (Pre-Pago)";
+        }
+    }
+}
+
+// Persistencia en LocalStorage
 function saveLocalProgress() {
-    localStorage.setItem("cero_ojeras_vip_state", JSON.stringify({
+    localStorage.setItem("selem_beauty_state", JSON.stringify({
         isVIP: state.isVIP,
-        completedDays: state.completedDays
+        completedExercises: state.completedExercises
     }));
 }
 
 function loadLocalProgress() {
-    const saved = localStorage.getItem("cero_ojeras_vip_state");
+    const saved = localStorage.getItem("selem_beauty_state");
     if (saved) {
         try {
             const parsed = JSON.parse(saved);
             state.isVIP = parsed.isVIP || false;
-            state.completedDays = parsed.completedDays || [];
-        } catch(e) {
-            console.error("Error al cargar estado local", e);
+            state.completedExercises = parsed.completedExercises || [];
+        } catch (e) {
+            console.error(e);
         }
     }
 }
 
-// Haptic feedback helper
+// Feedback Háptico (Telegram)
 function triggerHaptic(type) {
     if (tg && tg.HapticFeedback) {
-        switch(type) {
-            case 'impactLight': tg.HapticFeedback.impactOccurred('light'); break;
-            case 'impactHeavy': tg.HapticFeedback.impactOccurred('heavy'); break;
-            case 'selectionChanged': tg.HapticFeedback.selectionChanged(); break;
-            case 'notificationSuccess': tg.HapticFeedback.notificationOccurred('success'); break;
-        }
+        if (type === 'impactLight') tg.HapticFeedback.impactOccurred('light');
+        if (type === 'impactMedium') tg.HapticFeedback.impactOccurred('medium');
+        if (type === 'selectionChanged') tg.HapticFeedback.selectionChanged();
+        if (type === 'notificationSuccess') tg.HapticFeedback.notificationOccurred('success');
     }
 }
 
-// Toast Notificación Breve
+// Notificaciones Toast
 function showToast(message) {
-    const existing = document.querySelector(".toast-popup");
+    const existing = document.querySelector(".toast-notification");
     if (existing) existing.remove();
 
     const toast = document.createElement("div");
-    toast.className = "toast-popup";
+    toast.className = "toast-notification";
     toast.innerText = message;
-    toast.style.cssText = `
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(45, 55, 72, 0.95);
-        color: #FFF;
-        padding: 10px 18px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        z-index: 300;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        animation: toastIn 0.3s ease;
-    `;
     document.body.appendChild(toast);
 
+    setTimeout(() => toast.classList.add("show"), 10);
     setTimeout(() => {
-        toast.style.opacity = "0";
-        toast.style.transition = "opacity 0.3s ease";
+        toast.classList.remove("show");
         setTimeout(() => toast.remove(), 300);
-    }, 3000);
+    }, 2800);
 }
