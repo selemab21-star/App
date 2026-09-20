@@ -1,0 +1,16 @@
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    # Permitir iframe en Telegram WebApp
+    Content-Security-Policy = "frame-ancestors 'self' https://web.telegram.org https://*.telegram.org telegram:;"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

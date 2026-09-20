@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Cero Ojeras VIP - Mini App Telegram</title>
+    
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Bar de Simulación / Selector de Entorno Local -->
+    <div class="dev-banner" id="devBanner">
+        <div class="dev-info">
+            <span class="dev-chip">💡 MODO PRUEBAS</span>
+            <span id="devStatusText">Estado: Bloqueado (Pre-Pago)</span>
+        </div>
+        <button class="btn-dev-toggle" id="btnToggleState" onclick="toggleVIPState()">
+            ⚡ Simular Compra VIP
+        </button>
+    </div>
+
+    <div class="app-container">
+        
+        <!-- Header Principal -->
+        <header class="header">
+            <div class="user-greeting">
+                <div class="avatar-ring">
+                    <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Usuario">
+                </div>
+                <div class="user-info">
+                    <span class="greeting-subtitle">Bienvenida al cambio</span>
+                    <h2 class="user-name" id="userName">Hola, Beauty VIP ✨</h2>
+                </div>
+            </div>
+            <div class="header-badge" id="vipStatusBadge">
+                <span>🔒 PLAN FREEMIUM</span>
+            </div>
+        </header>
+
+        <!-- Banner Promocional Principal -->
+        <div class="hero-banner">
+            <span class="badge-locked" id="bannerBadge">🔒 Exclusivo 14 Días</span>
+            <img src="assets/hero_banner.png" alt="Tratamiento Cero Ojeras VIP" class="banner-img" onerror="this.src='https://images.unsplash.com/photo-1512290900673-030635e07661?auto=format&fit=crop&w=800&q=80'">
+            <div class="banner-overlay">
+                <h1 class="banner-title">✨ Plan Cero Ojeras & Face Yoga</h1>
+                <p class="banner-desc">Desinflama, aclara y rejuvenece tu mirada de forma 100% natural</p>
+            </div>
+        </div>
+
+        <!-- Navegación por Pestañas -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('protocolo')">📋 Protocolo</button>
+            <button class="tab-btn" onclick="switchTab('rutinas')">⚡ Rutinas Express</button>
+            <button class="tab-btn" onclick="switchTab('testimonios')">🌟 Resultados</button>
+            <button class="tab-btn" onclick="switchTab('faq')">❓ FAQ</button>
+        </nav>
+
+        <!-- PESTAÑA 1: PROTOCOLO 14 DÍAS (BLOQUEADO / DESBLOQUEADO) -->
+        <section id="tab-protocolo" class="tab-content active">
+            
+            <div class="section-header">
+                <h3>🗓️ Tu Calendario de Transformación</h3>
+                <p>14 días de drenaje linfático facial y ejercicios crio-activos.</p>
+            </div>
+
+            <!-- Progreso VIP (visible cuando está activo) -->
+            <div class="progress-card unlocked-only hidden" id="progressCard">
+                <div class="progress-header">
+                    <span>Meta de la Semana</span>
+                    <strong id="progressText">0 de 14 Días Completados</strong>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBarFill" style="width: 7%;"></div>
+                </div>
+            </div>
+
+            <!-- Tarjeta de Contenido / Paywall Lock -->
+            <div class="preview-card" id="previewCard">
+                
+                <div class="preview-card-header">
+                    <span class="preview-tag">🔥 Protocolo Recomendado</span>
+                    <h4>Rutinas Diarias Guiadas</h4>
+                </div>
+
+                <!-- Lista de Ejercicios (Con Blur en modo Bloqueado) -->
+                <div class="content-list" id="contentList">
+                    
+                    <!-- Día 1 -->
+                    <div class="routine-item unlocked-item" onclick="openExerciseModal(1)">
+                        <div class="item-img-wrap">
+                            <img src="assets/routine_crio.png" alt="Técnica Crio-Drenante" onerror="this.src='https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=200&q=80'">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <div class="item-details">
+                            <div class="item-badge">Día 1 • 5 min</div>
+                            <h5>Técnica Crio-Drenante de Mañana</h5>
+                            <p>Masaje escultor express con cucharas frías o rodillo para activar la circulación sanguínea.</p>
+                        </div>
+                        <button class="btn-item-action">Iniciar</button>
+                    </div>
+
+                    <!-- Día 2 -->
+                    <div class="routine-item unlocked-item" onclick="openExerciseModal(2)">
+                        <div class="item-img-wrap">
+                            <img src="assets/routine_oil.png" alt="Rosa Mosqueta" onerror="this.src='https://images.unsplash.com/photo-1608248597260-3103780315a0?auto=format&fit=crop&w=200&q=80'">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <div class="item-details">
+                            <div class="item-badge">Día 2 • 7 min</div>
+                            <h5>Fórmula Aclarante con Rosa Mosqueta</h5>
+                            <p>Técnica de presopuntura para despigmentar ojeras oscuras o moradas.</p>
+                        </div>
+                        <button class="btn-item-action">Iniciar</button>
+                    </div>
+
+                    <!-- Día 3 -->
+                    <div class="routine-item unlocked-item" onclick="openExerciseModal(3)">
+                        <div class="item-img-wrap">
+                            <img src="https://images.unsplash.com/photo-1512290900673-030635e07661?auto=format&fit=crop&w=200&q=80" alt="Levantamiento de Párpados">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <div class="item-details">
+                            <div class="item-badge">Día 3 • 6 min</div>
+                            <h5>Levantamiento de Párpado y Mirada Cansada</h5>
+                            <p>Ejercicios isometricos de párpado superior para eliminar la retención de líquidos.</p>
+                        </div>
+                        <button class="btn-item-action">Iniciar</button>
+                    </div>
+
+                </div>
+
+                <!-- Capa de Bloqueo Flotante (Paywall Overlay) -->
+                <div class="lock-overlay" id="lockOverlay">
+                    <div class="lock-card">
+                        <div class="lock-icon-bounce">🔒</div>
+                        <h4>Contenido Protegido VIP</h4>
+                        <p>Desbloquea los 14 días completos de Face Yoga, masajes desinflamatorios y la guía de sérums naturales.</p>
+                        
+                        <ul class="benefit-list">
+                            <li>✓ 14 Rutinas en Video HD (5 min/día)</li>
+                            <li>✓ Masajes Crio-Drenantes y Gua Sha</li>
+                            <li>✓ Recetario de Mascarillas Naturales</li>
+                            <li>✓ Acceso de por vida en Telegram</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- PESTAÑA 2: RUTINAS EXPRESS -->
+        <section id="tab-rutinas" class="tab-content">
+            <div class="section-header">
+                <h3>⚡ Rutinas Express (5 Minutos)</h3>
+                <p>Técnicas rápidas para usar antes de un evento o al despertar.</p>
+            </div>
+
+            <div class="express-grid">
+                <div class="express-card" onclick="openExerciseModal(1)">
+                    <div class="express-tag">MAÑANA</div>
+                    <h4>❄️ Desinflamación Flash con Hielo</h4>
+                    <p>Ideal si amaneciste con párpados hinchados por retención de sal o desvelos.</p>
+                    <button class="btn-secondary">Ver Guía</button>
+                </div>
+                <div class="express-card" onclick="openExerciseModal(2)">
+                    <div class="express-tag">NOCHE</div>
+                    <h4>🌙 Drenaje Linfático Nocturno</h4>
+                    <p>Relaja la tensión periocular y estimula la síntesis de colágeno natural.</p>
+                    <button class="btn-secondary">Ver Guía</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PESTAÑA 3: RESULTADOS Y TESTIMONIOS -->
+        <section id="tab-testimonios" class="tab-content">
+            <div class="section-header">
+                <h3>🌟 Testimonios de la Comunidad</h3>
+                <p>Resultados reales en 14 días practicando 5 minutos diarios.</p>
+            </div>
+
+            <div class="reviews-container">
+                <div class="review-card">
+                    <div class="review-user">
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=80" alt="Camila R.">
+                        <div>
+                            <strong>Camila R. ⭐⭐⭐⭐⭐</strong>
+                            <small>Verificada • México</small>
+                        </div>
+                    </div>
+                    <p class="review-text">"Tenía las ojeras muy moradas por el trabajo en computadora. El masaje de la mañana con rosa mosqueta me cambió la cara por completo en solo 1 semana."</p>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-user">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=100&q=80" alt="Lucía M.">
+                        <div>
+                            <strong>Lucía M. ⭐⭐⭐⭐⭐</strong>
+                            <small>Verificada • Colombia</small>
+                        </div>
+                    </div>
+                    <p class="review-text">"La mejor inversión en Telegram. Los videos explicativos son super cortos y los ejercicios facilísimos de hacer."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PESTAÑA 4: FAQ -->
+        <section id="tab-faq" class="tab-content">
+            <div class="section-header">
+                <h3>❓ Preguntas Frecuentes</h3>
+                <p>Todo lo que necesitas saber antes de empezar tu tratamiento.</p>
+            </div>
+
+            <div class="faq-accordion">
+                <details class="faq-item">
+                    <summary>¿En cuánto tiempo veré resultados?</summary>
+                    <div class="faq-body">
+                        La hinchazón matutina disminuye desde el primer día gracias a la técnica crio-drenante. El aclaramiento de pigmentación suele apreciarse entre el día 7 y 14.
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>¿Necesito herramientas costosas?</summary>
+                    <div class="faq-body">
+                        No. Solo necesitas tus manos limpia, un aceite vegetal (como Rosa Mosqueta o Almendras) y dos cucharas frías de tu cocina.
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>¿Cómo me llega el acceso?</summary>
+                    <div class="faq-body">
+                        El acceso es instantáneo e ilimitado dentro de esta misma Mini App en tu Telegram.
+                    </div>
+                </details>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- BOTÓN FIXO / CTA DE PAGO -->
+    <div class="sticky-footer" id="stickyFooter">
+        <button class="btn-unlock" id="btnUnlock" onclick="desbloquearPlan()">
+            <span class="btn-icon">🔓</span>
+            <span class="btn-text">DESBLOQUEAR PLAN VIP • $9.99 USD</span>
+        </button>
+        <div class="guarantee-text">
+            <span>⚡ Acceso inmediato de por vida</span> • <span>🔒 Pago 100% seguro en Telegram</span>
+        </div>
+    </div>
+
+    <!-- MODAL DE EJERCICIO / CRONÓMETRO -->
+    <div class="modal-backdrop" id="exerciseModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeExerciseModal()">✕</button>
+            <div class="modal-header">
+                <span class="modal-badge" id="modalBadge">Día 1</span>
+                <h3 id="modalTitle">Técnica Crio-Drenante de Mañana</h3>
+            </div>
+
+            <div class="timer-container">
+                <div class="timer-circle">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" class="timer-bg"></circle>
+                        <circle cx="50" cy="50" r="45" class="timer-progress" id="timerCircle"></circle>
+                    </svg>
+                    <div class="timer-display" id="timerDisplay">03:00</div>
+                </div>
+            </div>
+
+            <div class="exercise-instructions">
+                <h4>Paso a Paso:</h4>
+                <ol id="modalSteps">
+                    <li>Limpia suavemente el rostro y aplica 2 gotas de sérum o aceite.</li>
+                    <li>Usa tus yemas para dar ligeros toques desde el lagrimal hacia las sienes.</li>
+                    <li>Desliza sin presionar excesivamente durante 3 minutos.</li>
+                </ol>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-timer" id="btnTimerStart" onclick="toggleTimer()">▶ Iniciar Ejercicio</button>
+                <button class="btn-complete" onclick="markExerciseComplete()">✓ Marcar Como Completado</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TELEGRAM DATA PAYLOAD (Para depuración / Pruebas en Navegador) -->
+    <div class="modal-backdrop" id="telegramPayloadModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closePayloadModal()">✕</button>
+            <div class="modal-header">
+                <h3>📲 Conexión Telegram WebApp</h3>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+                La función <code>tg.sendData()</code> ha preparado la siguiente orden para enviar al Bot de Telegram:
+            </p>
+            <pre class="json-code" id="jsonPayloadCode"></pre>
+            <div class="modal-actions" style="margin-top: 16px;">
+                <button class="btn-timer" onclick="simulateSuccessfulPayment()">⚡ Simular Respuesta de Bot (Desbloquear)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>
