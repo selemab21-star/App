@@ -2,367 +2,200 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Selem Beauty - Cero Ojeras VIP</title>
-    
-    <!-- Telegram WebApp SDK -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selem Beauty — Digital Glow Up & Rutinas</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Custom CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Bar de Simulación / Selector de Entorno Local -->
-    <div class="dev-banner" id="devBanner">
-        <div class="dev-info">
-            <span class="dev-chip">💡 MODO PRUEBAS</span>
-            <span id="devStatusText">Estado: 🔒 Bloqueado (Pre-Pago)</span>
-        </div>
-        <button class="btn-dev-toggle" id="btnToggleState" onclick="toggleVIPState()">
-            ⚡ Simular Compra VIP
-        </button>
-    </div>
+    <!-- NAV HEADER -->
+    <header class="navbar">
+        <div class="logo">SELEM BEAUTY</div>
+        <div class="tagline">Glow Up Guide & Targeted Routines</div>
+    </header>
 
-    <!-- Contenedor Principal de la App -->
-    <div class="app-viewport">
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <span class="badge">Edición Especial • Guías de Solución</span>
+        <h1>Glow Up Rutinas & Soluciones Puntos Clave</h1>
+        <p>Aprende las técnicas exactas, ingredientes clave y masajes para transformar tu piel, cabello y rostro desde casa.</p>
         
-        <!-- VISTA 1: BIENVENIDA / SPLASH (HOME - SELEM BEAUTY) -->
-        <section id="view-welcome" class="app-view active">
-            <div class="splash-container">
-                <img src="assets/home_bg.jpg" alt="Selem Beauty" class="splash-bg" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=85'">
-                <div class="splash-overlay"></div>
-                
-                <div class="splash-logo-wrap">
-                    <svg class="splash-heart-icon" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                    </svg>
-                    <div class="splash-brand-name">selem</div>
-                    <div class="splash-brand-tag">Beauty</div>
-                </div>
-
-                <div class="splash-footer">
-                    <div class="splash-accent-bar"></div>
-                    <div class="splash-text-group">
-                        <h1 class="splash-heading">BIENVENIDO A<br>SELEM BEAUTY</h1>
-                        <button class="btn-start-routine" onclick="goToAppView('basico')">
-                            <span>EMPEZAR RUTINA DIARIA</span>
-                        </button>
-                    </div>
-                </div>
+        <!-- PROGRESOS -->
+        <div class="progress-box">
+            <div class="progress-header">
+                <span>Tu Progreso Hoy</span>
+                <span id="progress-percentage">0%</span>
             </div>
-        </section>
-
-        <!-- VISTA 2: APLICACIÓN PRINCIPAL (PLANES & CONTENIDO) -->
-        <section id="view-app" class="app-view">
-            
-            <!-- Header Superior -->
-            <header class="app-header">
-                <button class="btn-back" onclick="goToWelcomeView()" title="Volver al Home">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="15 18 9 12 15 6"></polyline>
-                    </svg>
-                </button>
-                <div class="header-logo-text">selem <span>Beauty</span></div>
-                <button class="btn-header-vip" id="vipStatusBadge" onclick="toggleVIPState()">
-                    🔒 FREEMIUM
-                </button>
-            </header>
-
-            <!-- Pestañas de Navegación del Plan -->
-            <nav class="plan-tabs">
-                <button class="tab-btn active" id="tabBtnBasico" onclick="switchPlanTab('basico')">
-                    🌿 Plan Básico
-                </button>
-                <button class="tab-btn" id="tabBtnPremium" onclick="switchPlanTab('premium')">
-                    ⭐ Plan Premium VIP
-                </button>
-            </nav>
-
-            <!-- CONTENIDO PLAN BÁSICO -->
-            <div id="planContentBasico" class="plan-tab-content active">
-                
-                <div class="hero-plan-card">
-                    <span class="plan-tag-free">✨ Incluido</span>
-                    <h2>Elimina las Ojeras (Plan Básico)</h2>
-                    <p class="hero-plan-desc">
-                        Pensado para los días en que te levantas con cara de cansada, ojos hinchados o sombras oscuras por no dormir bien. Es rápido, natural y efectivo.
-                    </p>
-                </div>
-
-                <!-- Sección: Ingredientes Mágicos -->
-                <div class="section-block">
-                    <h3 class="section-title">🧪 Los Ingredientes Mágicos</h3>
-                    <div class="ingredients-grid">
-                        <div class="ingredient-card">
-                            <div class="ing-icon">☕</div>
-                            <h4>Café o Té Verde</h4>
-                            <p>La cafeína es el mejor ingrediente para "despertar" la piel y achicar los vasos sanguíneos que hacen que la ojera se vea morada.</p>
-                        </div>
-                        <div class="ingredient-card">
-                            <div class="ing-icon">🥒</div>
-                            <h4>Pepino o Manzanilla</h4>
-                            <p>Calman, desinflaman y dan esa sensación de frescura al instante.</p>
-                        </div>
-                        <div class="ingredient-card">
-                            <div class="ing-icon">💧</div>
-                            <h4>Aceite de Almendras o Argán</h4>
-                            <p>Súper hidratantes para que la piel finita debajo del ojo no se reseque ni se marquen líneas.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sección: Tu Rutina Paso a Paso -->
-                <div class="section-block">
-                    <h3 class="section-title">📋 Tu Rutina Paso a Paso</h3>
-                    
-                    <!-- Mañana -->
-                    <div class="routine-card">
-                        <div class="routine-card-header">
-                            <span class="time-badge">🌅 Por la Mañana • 3 min</span>
-                            <h4>Despertar y Desinflamar</h4>
-                        </div>
-                        <ol class="step-list">
-                            <li>
-                                <strong>Compresas Frías:</strong> Si tienes bolsitas de té verde congeladas o usadas de la noche anterior, póntelas sobre los ojos cerrados unos 3 a 5 minutos. El frío + la cafeína hacen magia rápida.
-                            </li>
-                            <li>
-                                <strong>Sérum / Crema:</strong> Ponte unas gotitas de un sérum o crema con cafeína o té verde dando suaves toquecitos con el dedo anular (es el que menos fuerza tiene) desde adentro hacia afuera.
-                            </li>
-                            <li>
-                                <strong>¡Protector Solar Obligatorio!:</strong> Si no te pones bloqueador, el sol va a oscurecer más la zona.
-                            </li>
-                        </ol>
-                        <button class="btn-start-modal" onclick="openCustomTimerModal('Rutina de Mañana (Plan Básico)', 180, ['Bolsitas de té verde congeladas sobre ojos cerrados (3 a 5 min)', 'Poner gotitas de sérum/crema con cafeína usando dedo anular de adentro hacia afuera', '¡Aplicar protector solar obligatoriamente!'])">
-                            ▶ Iniciar Rutina (3 Min)
-                        </button>
-                    </div>
-
-                    <!-- Noche -->
-                    <div class="routine-card" style="margin-top: 16px;">
-                        <div class="routine-card-header">
-                            <span class="time-badge night">🌙 Por la Noche • 2 min</span>
-                            <h4>Nutrición Nocturna</h4>
-                        </div>
-                        <ol class="step-list">
-                            <li>
-                                <strong>Hidratación Pura:</strong> Con la cara limpia, ponte 1 sola gota de aceite de almendras o argán en la punta de los dedos.
-                            </li>
-                            <li>
-                                <strong>Masaje Circular Suave:</strong> Haz un masaje circular súper suave alrededor del hueso del ojo. Esto nutre la piel mientras duermes y evita que se vea marchita al día siguiente.
-                            </li>
-                        </ol>
-                        <button class="btn-start-modal" onclick="openCustomTimerModal('Rutina de Noche (Plan Básico)', 120, ['Con la cara limpia, colocar 1 gota de aceite de almendras o argán', 'Realizar masaje circular súper suave alrededor del hueso del ojo'])">
-                            ▶ Iniciar Rutina (2 Min)
-                        </button>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- CONTENIDO PLAN PREMIUM VIP -->
-            <div id="planContentPremium" class="plan-tab-content">
-                
-                <!-- SI ESTÁ BLOQUEADO (PAYWALL SALES COPY) -->
-                <div class="locked-sales-card" id="premiumPaywall">
-                    <div class="sales-banner-tag">⭐ PLAN PREMIUM "CERO OJERAS VIP"</div>
-                    
-                    <h2 class="sales-headline">
-                        👁️ Deja de tapar tus ojeras con corrector... corrígelas desde la raíz.
-                    </h2>
-                    
-                    <p class="sales-sub">
-                        ¿Sabías que el 80% de las mujeres aplica mal sus productos y termina inflamando más la zona de los ojos?
-                    </p>
-
-                    <div class="sales-box">
-                        <p>
-                            En el <strong>Plan Premium "Cero Ojeras VIP"</strong> no te vendemos productos caros. Te enseñamos a usar la potencia de la cosmética natural y las técnicas de drenaje linfático para que veas cambios reales desde la primera semana.
-                        </p>
-                    </div>
-
-                    <div class="features-preview">
-                        <h4>🔒 Contenido Exclusivo Incluido:</h4>
-                        <ul>
-                            <li>✓ <strong>Cóctel de Ingredientes Estrella:</strong> Rosa Mosqueta, Cacao/Sésamo, Aloe Vera Puro + Miel, Cúrcuma/Papa y Agua de Rosas.</li>
-                            <li>✓ <strong>Ritual Matutino Crio-Activo (5-7 min):</strong> Masaje con hielo/cucharas congeladas + Sérum aclarante de papa y Aloe.</li>
-                            <li>✓ <strong>Reparación Profunda de Noche (8 min):</strong> Doble limpieza, mascarilla nocturna express y el masaje escultor "Borrador de Fatiga".</li>
-                            <li>✓ Acceso de por vida en la Mini App de Telegram.</li>
-                        </ul>
-                    </div>
-
-                    <div class="price-box">
-                        <div class="price-title">🏷️ Oferta Exclusiva de Lanzamiento</div>
-                        <div class="price-amount">$9.99 USD</div>
-                        <div class="price-note">(Menos de lo que cuesta un solo producto de farmacia)</div>
-                        
-                        <button class="btn-unlock-vip" onclick="desbloquearPlanVIP()">
-                            🔓 DESBLOQUEAR MI ACCESO VIP
-                        </button>
-                    </div>
-                </div>
-
-                <!-- SI ESTÁ DESBLOQUEADO (CONTENIDO PREMIUM COMPLETO) -->
-                <div class="unlocked-premium-content hidden" id="premiumContent">
-                    
-                    <div class="hero-plan-card vip-gold">
-                        <span class="plan-tag-vip">⭐ MIEMBRO VIP</span>
-                        <h2>"Cero Ojeras" (Plan Premium VIP)</h2>
-                        <p class="hero-plan-desc">
-                            Cosmética natural intensiva y el ritual paso a paso para desinflamar, aclarar y regenerar la piel del contorno de ojos.
-                        </p>
-                    </div>
-
-                    <!-- El Cóctel de Ingredientes Estrella -->
-                    <div class="section-block">
-                        <h3 class="section-title">✨ El Cóctel de Ingredientes Estrella</h3>
-                        <div class="ingredients-grid">
-                            <div class="ingredient-card gold">
-                                <div class="ing-icon">🌹</div>
-                                <h4>Aceite de Rosa Mosqueta / Cacao / Sésamo</h4>
-                                <p>Regeneradores potentes que aclaran manchas, nutren a profundidad y estimulan la producción de colágeno natural.</p>
-                            </div>
-                            <div class="ingredient-card gold">
-                                <div class="ing-icon">🍯</div>
-                                <h4>Gel de Aloe Vera Puro + Miel</h4>
-                                <p>La mezcla perfecta para hidratar sin engrasar, calmar irritaciones y tensar la piel.</p>
-                            </div>
-                            <div class="ingredient-card gold">
-                                <div class="ing-icon">🥔</div>
-                                <h4>Cúrcuma (en pizca) o Papa/Patata</h4>
-                                <p>La papa tiene enzimas naturales y vitamina C que ayudan a aclarar el tono oscuro de la piel de inmediato.</p>
-                            </div>
-                            <div class="ingredient-card gold">
-                                <div class="ing-icon">🌸</div>
-                                <h4>Agua de Rosas</h4>
-                                <p>Tonifica, refresca y equilibra el pH de la piel del contorno.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Ritual Intensivo Paso a Paso -->
-                    <div class="section-block">
-                        <h3 class="section-title">👑 Tu Ritual Intensivo Paso a Paso</h3>
-
-                        <!-- Mañana Premium -->
-                        <div class="routine-card gold">
-                            <div class="routine-card-header">
-                                <span class="time-badge gold">🌅 Mañana: Desinflama y Aclara • 5 a 7 min</span>
-                                <h4>Ritual Matutino Crio-Activo</h4>
-                            </div>
-                            <ol class="step-list">
-                                <li>
-                                    <strong>Paso Frío:</strong> Pasa un cubito de hielo envuelto en un paño suave (o dos cucharas que dejaste en el congelador 5 minutos) por la zona del pómulo y alrededor del ojo. Muévelo siempre hacia afuera, hacia las sienes.
-                                </li>
-                                <li>
-                                    <strong>Sérum Aclarante:</strong> Aplica un par de gotas de jugo de papa recién rallada mezclada con un toque de aloe vera, o un sérum natural con Vitamina C. Aporta luz de inmediato.
-                                </li>
-                                <li>
-                                    <strong>Sellar e Iluminar:</strong> Aplica tu crema de ojos habitual y finaliza con protector solar obligatoriamente.
-                                </li>
-                            </ol>
-                            <button class="btn-start-modal gold" onclick="openCustomTimerModal('Ritual Matutino Premium (5-7 min)', 360, ['Paso Frío: Hielo en paño o cucharas congeladas hacia las sienes', 'Sérum Aclarante: Jugo de papa recién rallada + Aloe o Vit C', 'Sellar: Crema de ojos + Protector solar obligatorio'])">
-                                ▶ Iniciar Ritual Matutino (6 Min)
-                            </button>
-                        </div>
-
-                        <!-- Noche Premium -->
-                        <div class="routine-card gold" style="margin-top: 16px;">
-                            <div class="routine-card-header">
-                                <span class="time-badge night-gold">🌙 Noche: Reparación Profunda • 8 min</span>
-                                <h4>Masaje Escultor "Borrador de Fatiga"</h4>
-                            </div>
-                            <ol class="step-list">
-                                <li>
-                                    <strong>Doble Limpieza Suave:</strong> Limpia la zona con agua de rosas o un aceite vegetal liviano para retirar cualquier suciedad sin estirar la piel.
-                                </li>
-                                <li>
-                                    <strong>Mascarilla Nocturna Express (2 veces por semana):</strong> Mezcla una cucharada de gel de aloe vera con 1 gota de aceite de rosa mosqueta. Aplícalo como una capa un poco más gruesa y déjalo actuar 10 minutos antes de retirar el exceso.
-                                </li>
-                                <li>
-                                    <strong>Elixir de Noche:</strong> Aplica 1 o 2 gotas de aceite de rosa mosqueta puro.
-                                </li>
-                                <li>
-                                    <strong>El Masaje "Borrador de Fatiga":</strong>
-                                    <ul>
-                                        <li>• Presiona 3 segundos en el inicio de la ceja (cerca de la nariz).</li>
-                                        <li>• Presiona 3 segundos en la sien.</li>
-                                        <li>• Con la yema de los dedos, haz "tecleos" suaves (como si tocaras el piano) por todo el contorno para activar el drenaje linfático.</li>
-                                    </ul>
-                                </li>
-                            </ol>
-                            <button class="btn-start-modal gold" onclick="openCustomTimerModal('Masaje Escultor Borrador de Fatiga', 480, ['Doble Limpieza Suave con agua de rosas o aceite liviano', 'Mascarilla Express: Aloe Vera + 1 gota Rosa Mosqueta (10 min, 2x/sem)', 'Elixir de Noche: 1-2 gotas de rosa mosqueta puro', 'Masaje Borrador de Fatiga: Presión inicio ceja (3s) + Sien (3s) + Tecleos de piano'])">
-                                ▶ Iniciar Masaje Escultor (8 Min)
-                            </button>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </div>
-
-    <!-- MODAL DE EJERCICIO / CRONÓMETRO INTERACTIVO -->
-    <div class="modal-backdrop" id="exerciseModal">
-        <div class="modal-card">
-            <button class="modal-close" onclick="closeExerciseModal()">✕</button>
-            <div class="modal-header">
-                <span class="modal-badge" id="modalBadge">Rutina Guiada</span>
-                <h3 id="modalTitle">Nombre de la Rutina</h3>
-            </div>
-
-            <div class="timer-container">
-                <div class="timer-circle">
-                    <svg viewBox="0 0 100 100">
-                        <circle cx="50" cy="50" r="45" class="timer-bg"></circle>
-                        <circle cx="50" cy="50" r="45" class="timer-progress" id="timerCircle"></circle>
-                    </svg>
-                    <div class="timer-display" id="timerDisplay">03:00</div>
-                </div>
-            </div>
-
-            <div class="exercise-instructions">
-                <h4>Paso a Paso Recomendado:</h4>
-                <ol id="modalSteps">
-                    <!-- Pasos inyectados dinámicamente -->
-                </ol>
-            </div>
-
-            <div class="modal-actions">
-                <button class="btn-timer" id="btnTimerStart" onclick="toggleTimer()">▶ Iniciar Rutina</button>
-                <button class="btn-complete" onclick="markExerciseComplete()">✓ Marcar Como Completado</button>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-fill"></div>
             </div>
         </div>
+    </section>
+
+    <!-- CATEGORÍAS -->
+    <div class="categories">
+        <button class="cat-btn active">Todas las Rutinas</button>
+        <button class="cat-btn">Rostro & Lifting</button>
+        <button class="cat-btn">Cuerpo & Axilas</button>
+        <button class="cat-btn">Cabello & Cuero Cabelludo</button>
     </div>
 
-    <!-- MODAL TELEGRAM DATA PAYLOAD (Para depuración / Pruebas en Navegador) -->
-    <div class="modal-backdrop" id="telegramPayloadModal">
-        <div class="modal-card">
-            <button class="modal-close" onclick="closePayloadModal()">✕</button>
-            <div class="modal-header">
-                <h3>📲 Conexión Telegram WebApp</h3>
+    <!-- CONTENEDOR DE RUTINAS (GRID INFOGRÁFICO) -->
+    <main class="grid-container">
+
+        <!-- RUTINA 1: AXILAS -->
+        <article class="routine-card">
+            <div class="card-header">
+                <span class="step-num">01</span>
+                <div>
+                    <h2>Aclarar & Eliminar Manchas en Axilas</h2>
+                    <span class="time-tag">⏱️ 15 MIN • CUERPO</span>
+                </div>
             </div>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
-                La función <code>tg.sendData()</code> ha preparado la siguiente orden para enviar al Bot de Telegram:
-            </p>
-            <pre class="json-code" id="jsonPayloadCode"></pre>
-            <div class="modal-actions" style="margin-top: 16px;">
-                <button class="btn-timer" onclick="simulateSuccessfulPayment()">⚡ Simular Respuesta de Bot (Desbloquear VIP)</button>
+            <div class="card-media">
+                <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80" alt="Cuidado corporal">
+            </div>
+            <div class="card-content">
+                <ul class="step-list">
+                    <li><input type="checkbox" onclick="updateProgress()"> Exfoliación suave 2 veces por semana con Ácido Láctico o Glicólico al 5%.</li>
+                    <li><input type="checkbox" onclick="updateProgress()"> Aplicar sérum de Niacinamida al 5% por la noche para despigmentar.</li>
+                    <li><input type="checkbox" onclick="updateProgress()"> Sustituir desodorantes con alcohol o aluminio por fórmulas hidratantes sin irritantes.</li>
+                    <li><input type="checkbox" onclick="updateProgress()"> Evitar la fricción de rasuradoras de hoja; preferir cera o depilación láser.</li>
+                </ul>
+                <div class="pro-tip">
+                    💡 <strong>Pro-Tip:</strong> No uses bicarbonato ni limón; alteran el pH y generan más hiperpigmentación.
+                </div>
+            </div>
+        </article>
+
+        <!-- RUTINA 2: CASPA Y CABELLO GRASO -->
+        <article class="routine-card">
+            <div class="card-header">
+                <span class="step-num">02</span>
+                <div>
+                    <h2>Cuero Cabelludo Limpio: Sin Caspa ni Grasa</h2>
+                    <span class="time-tag">⏱️ 20 MIN • CABELLO</span>
+                </div>
+            </div>
+            <div class="card-media">
+                <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=80" alt="Cuidado del cabello">
+            </div>
+            <div class="card-content">
+                <ul class="step-list">
+                    <li><input type="checkbox" onclick="updateProgress()"> Exfoliante capilar con Ácido Salicílico (BHA) antes del lavado para disolver grasa acumulada.</li>
+                    <li><input type="checkbox" onclick="updateProgress()"> Doble lavado con champú clarificante o Piritionato de Zinc enfocado solo en la raíz.</li>
+                    <li><input type="checkbox" onclick="updateProgress()"> Masajear con cepillo de silicona en movimientos circulares suaves.</li>
+                    <li><input type="checkbox" onclick="updateProgress()"> Aplicar acondicionador de medios a puntas; nunca en el cuero cabelludo.</li>
+                </ul>
+                <div class="pro-tip">
+                    💡 <strong>Pro-Tip:</strong> Seca la raíz con aire tibio inmediatamente después de lavar; la humedad fomenta el hongo de la caspa.
+                </div>
+            </div>
+        </article>
+
+        <!-- RUTINA 3: OJERAS Y BOLSAS -->
+        <article class="routine-card">
+            <div class="card-header">
+                <span class="step-num">03</span>
+                <div>
+                    <h2>Desinflamar Bolsas & Eliminar Ojeras</h2>
+                    <span class="time-tag">⏱️ 10 MIN • ROSTRO</span>
+                </div>
+            </div>
+            <div class="card-media">
+                <img src="https://images.unsplash.com/photo-1512290900673-356c9a725178?auto=format&fit=crop&w=600&q=80" alt="Cuidado del rostro">
+            </div>
+            <div class="card-content">
+                <ul class="step-list">
+                    <li><input type="checkbox" onclick="updateProgress()"> Colocar parches fríos de gel o cucharas congeladas durante 3 minutos.</li>
+                    <li><input type="checkbox" onclick="updateProgress()"> Drenaje linfático: ligeros toques con el dedo anular desde el lagrimal hacia las sienes.</li>
+                    <li><input type="checkbox" onclick="updateProgress()"> Serum de Cafeína + Vitamina C por las mañanas para constreñir vasos sanguíneos.</li>
+                    <li><input type="checkbox" onclick="updateProgress()"> Dormir con la cabeza ligeramente elevada para evitar retención de líquidos.</li>
+                </ul>
+                <div class="pro-tip">
+                    💡 <strong>Pro-Tip:</strong> Si tus ojeras son oscuras/moradas, busca ingredientes como Vitamina K; si son marrones, usa Niacinamida.
+                </div>
+            </div>
+        </article>
+
+        <!-- RUTINA 4: ESCULPIR PAPADA -->
+        <article class="routine-card">
+            <div class="card-header">
+                <span class="step-num">04</span>
+                <div>
+                    <h2>Esculpir Mandíbula & Reducir Papada</h2>
+                    <span class="time-tag">⏱️ 12 MIN • FACIAL</span>
+                </div>
+            </div>
+            <div class="card-media">
+                <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80" alt="Masaje facial">
+            </div>
+            <div class="card-content">
+                <ul class="step-list">
+                    <li><input type="checkbox" onclick="updateProgress()"> Aplicar aceite facial (Jojoba o Escualano) para deslizar sin estirar la piel.</li>
+                    <li><input type="checkbox" onclick="updateProgress()"> Masaje Gua Sha o nudillos desde la barbilla hasta la base de las orejas (10 repeticiones).</li>
+                    <li><input type="checkbox" onclick="updateProgress()"> Drenar el cuello deslizando los dedos desde las orejas hacia las clavículas.</li>
+                    <li><input type="checkbox" onclick="updateProgress()"> Ejercicio de resistencia: presionar la lengua contra el paladar durante 10 segundos.</li>
+                </ul>
+                <div class="pro-tip">
+                    💡 <strong>Pro-Tip:</strong> Mantén la postura del cuello erguida frente al móvil ("Tech Neck") para prevenir arrugas en el cuello.
+                </div>
+            </div>
+        </article>
+
+    </main>
+
+    <!-- PLANES DE SUSCRIPCIÓN -->
+    <section class="pricing-section">
+        <h2>Planes de Membresía Selem Beauty</h2>
+        <p>Recibe guías interactivas actualizadas mes a mes en tu perfil.</p>
+
+        <div class="pricing-grid">
+            <div class="price-card">
+                <h3>Pase Mensual</h3>
+                <div class="price">$7.99 <span>/ mes</span></div>
+                <ul>
+                    <li>✓ Guía interactiva mensual</li>
+                    <li>✓ Actualizaciones de rutinas de temporada</li>
+                    <li>✓ Tracker diario de hábitos</li>
+                </ul>
+                <button class="btn-subscribe">Suscribirme Ahora</button>
+            </div>
+
+            <div class="price-card featured">
+                <span class="popular-badge">Más Elegido</span>
+                <h3>Membresía Anual VIP</h3>
+                <div class="price">$59.99 <span>/ año</span></div>
+                <ul>
+                    <li>✓ Todo lo del plan mensual</li>
+                    <li>✓ Ahorra más del 35% al año</li>
+                    <li>✓ Consultas personalizadas de tipo de piel</li>
+                    <li>✓ Acceso a masterclasses de Face Yoga</li>
+                </ul>
+                <button class="btn-subscribe primary">Obtener VIP Anual</button>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Custom JS -->
-    <script src="app.js"></script>
+    <footer>
+        <p>© 2026 Selem Beauty. All rights reserved. • Aesthetically crafted for you.</p>
+    </footer>
+
+    <script>
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.step-list input[type="checkbox"]');
+            let checkedCount = 0;
+            checkboxes.forEach(cb => {
+                if (cb.checked) checkedCount++;
+            });
+            const percent = Math.round((checkedCount / checkboxes.length) * 100);
+            document.getElementById('progress-percentage').innerText = percent + '%';
+            document.getElementById('progress-fill').style.width = percent + '%';
+        }
+    </script>
 </body>
 </html>
